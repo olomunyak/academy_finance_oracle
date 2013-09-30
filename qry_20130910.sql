@@ -1,0 +1,48 @@
+
+-- 전체 사원정보를 출력
+SELECT *
+FROM EMP;
+
+-- 사원테이블의 부서번호가 30인 사람들을 출력
+SELECT EMPNO, ENAME, SAL, DEPTNO 
+FROM EMP
+WHERE DEPTNO = 30;
+
+-- 사원이름이 SMITH인 사람을 출력
+SELECT EMPNO, ENAME, SAL, DEPTNO 
+FROM EMP
+WHERE ENAME = 'SMITH';
+
+-- 사원이름에 A가 포함되어 있는 사람 출력
+SELECT EMPNO, ENAME, SAL, DEPTNO 
+FROM EMP
+WHERE ENAME LIKE '%A%';
+
+-- 이름이 A로 시작하고 중간에 A가 포함된 사원정보 구하기
+SELECT EMPNO, ENAME, JOB, SAL, DEPTNO
+FROM EMP
+WHERE ENAME LIKE 'A%A%';
+
+-- 부서번호가 30이고 업무가 CLERK인 사원정보 구하기
+SELECT EMPNO, ENAME, SAL, DEPTNO 
+FROM EMP
+WHERE DEPTNO = 30
+AND JOB = 'CLERK';
+
+-- 1 + 2 * 3
+SELECT 1 + 2 * 3
+FROM DUAL;
+
+-- 커미션을 받는 사람들의 총급여와 사원정보를 구하시오
+SELECT EMPNO, ENAME, SAL, COMM, SAL + COMM AS TOTAL, DEPTNO 
+FROM EMP
+WHERE COMM IS NOT NULL;
+
+-- 전체 사원의 커미션과 급여의 합을 구하시오
+SELECT EMPNO, ENAME, SAL, COMM, SAL + NVL(COMM,0) AS TOTAL, DEPTNO 
+FROM EMP;
+
+-- 전체 사원의 커미션과 급여의 합을 구하고 사원번호가 높은 순서부터 정렬하시오
+SELECT EMPNO, ENAME, SAL, COMM, SAL + NVL(COMM,0) AS TOTAL, DEPTNO 
+FROM EMP
+ORDER BY EMPNO DESC;
