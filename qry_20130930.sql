@@ -71,7 +71,7 @@ WHERE ENAME NOT IN ('KING');
 SELECT AVG(SAL)
 FROM EMP;
 
---3.KING을 제외한 사원들의 급여 최대치와 최소치의 차이
+--3.KING을 제외한 사원들의 급여 최대치와 최소치의 차이,
 --전체 급여평균
 SELECT SU.SUB, AV.SAVG
 FROM (SELECT MAX(SAL) - MIN(SAL) AS SUB
