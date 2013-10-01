@@ -43,31 +43,19 @@ WHERE TO_CHAR(HIREDATE, 'MM') = (
 SELECT AVG(SAL)
 FROM EMP E INNER JOIN DEPT D
                    ON E.DEPTNO = D.DEPTNO
-WHERE D.DNAME = (
-                  SELECT DNAME
-                  FROM (
-                        SELECT DNAME, CNT, RANK() OVER(ORDER BY CNT DESC) RNK
-                        FROM (
-                              SELECT D.DNAME, COUNT(*) AS CNT
+WHERE D.DNAME = ( SELECT DNAME
+                  FROM (SELECT DNAME, CNT, RANK() OVER(ORDER BY CNT DESC) RNK
+                        FROM (SELECT D.DNAME, COUNT(*) AS CNT
                               FROM EMP E INNER JOIN DEPT D
                                                  ON E.DEPTNO = D.DEPTNO
-                              WHERE TO_CHAR(HIREDATE, 'MM') = (
-                                                                SELECT HMONTH
-                                                                FROM (
-                                                                      SELECT HMONTH, CNT, RANK() OVER(ORDER BY CNT DESC) AS RNK
-                                                                      FROM (
-                                                                            SELECT TO_CHAR(HIREDATE, 'MM') AS HMONTH, COUNT(*) AS CNT
+                              WHERE TO_CHAR(HIREDATE, 'MM') = ( SELECT HMONTH
+                                                                FROM (SELECT HMONTH, CNT, RANK() OVER(ORDER BY CNT DESC) AS RNK
+                                                                      FROM (SELECT TO_CHAR(HIREDATE, 'MM') AS HMONTH, COUNT(*) AS CNT
                                                                             FROM EMP
-                                                                            GROUP BY TO_CHAR(HIREDATE, 'MM')
-                                                                           )
-                                                                )
-                                                                WHERE RNK = 1
-                                                              )
-                              GROUP BY D.DNAME                                
-                             )
-                       )
-                  WHERE RNK = 1
-                );
+                                                                            GROUP BY TO_CHAR(HIREDATE, 'MM')))
+                                                                WHERE RNK = 1)
+                              GROUP BY D.DNAME))
+                  WHERE RNK = 1 );
                                
 --문제2)
 --KING을 상급자로 둔 사원들의 급여 평균을 구하고
@@ -84,7 +72,7 @@ WHERE D.DNAME = (
 --1.KING을 상급자로 둔 사원들의 급여 평균
 SELECT AVG(E1.SAL)
 FROM EMP E1 INNER JOIN EMP E2
-                   ON E1.MGR = E2.EMPNO
+                    ON E1.MGR = E2.EMPNO
 WHERE E2.ENAME IN ('KING');
 
 --2.KING을 상급자로 둔 사원들의 급여 평균을 구하고
@@ -119,3 +107,21 @@ FROM EMP E LEFT OUTER JOIN (SELECT AVG(E1.SAL) AS SAL
                    ON E.MGR = E3.EMPNO
                    AND E3.ENAME NOT IN ('KING')
 WHERE E.ENAME NOT IN ('KING');
+
+--문제2) (위의 문제해석 및 풀이가 틀려서 다시 작성)
+--KING을 상급자로 둔 사원들의 급여 평균을 구하고
+--그 평균 이상인 사원들의 급여를 30% 감봉하고 KING과 KING을
+--상급자로 둔 사원들을 제외하고 출력하시오
+SELECT E.EMPNO, E.ENAME, E.JOB, E.MGR, E.HIREDATE, E.SAL, E.COMM, E.DEPTNO, E.SAL * 0.7 AS RESAL
+FROM EMP E INNER JOIN (
+                        SELECT AVG(E1.SAL) AS SAL
+                        FROM EMP E1 INNER JOIN EMP E2
+                                           ON E1.MGR = E2.EMPNO
+                        WHERE E2.ENAME IN ('KING')
+                      ) KEMP
+                   ON 1 = 1
+           INNER JOIN EMP E3
+                   ON E.MGR = E3.EMPNO
+                   AND E3.ENAME NOT IN ('KING')
+WHERE E.SAL > KEMP.SAL
+AND E.ENAME NOT IN ('KING');
