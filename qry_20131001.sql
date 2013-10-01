@@ -106,17 +106,15 @@ FROM EMP E INNER JOIN (
 --그 평균 이상인 사원들의 급여를 30% 감봉                   
 -- KING과 KING을 상급자로 둔 사원들을 제외하고 출력하시오                   
 SELECT E.EMPNO, E.ENAME, E.JOB, E.MGR, E.HIREDATE, E.SAL, E.COMM, E.DEPTNO, /* KEMP.SAL, */
-       CASE WHEN E.SAL > KEMP.SAL
+       CASE WHEN E.SAL >= KEMP.SAL
             THEN E.SAL * 0.7
             ELSE E.SAL
        END RESAL
-FROM EMP E LEFT OUTER JOIN (
-                        SELECT AVG(E1.SAL) AS SAL
-                        FROM EMP E1 INNER JOIN EMP E2
-                                           ON E1.MGR = E2.EMPNO
-                        WHERE E2.ENAME IN ('KING')
-                      ) KEMP
-                   ON 1 = 1
+FROM EMP E LEFT OUTER JOIN (SELECT AVG(E1.SAL) AS SAL
+                            FROM EMP E1 INNER JOIN EMP E2
+                                                ON E1.MGR = E2.EMPNO
+                                                AND E2.ENAME IN ('KING')) KEMP
+                        ON 1 = 1
            INNER JOIN EMP E3
                    ON E.MGR = E3.EMPNO
                    AND E3.ENAME NOT IN ('KING')
