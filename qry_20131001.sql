@@ -105,7 +105,7 @@ FROM EMP E INNER JOIN (
 --3.KING을 상급자로 둔 사원들의 급여 평균을 구하고
 --그 평균 이상인 사원들의 급여를 30% 감봉                   
 -- KING과 KING을 상급자로 둔 사원들을 제외하고 출력하시오                   
-SELECT E.EMPNO, E.ENAME, E.JOB, E.MGR, E.HIREDATE, E.SAL, E.COMM, E.DEPTNO, KEMP.SAL,
+SELECT E.EMPNO, E.ENAME, E.JOB, E.MGR, E.HIREDATE, E.SAL, E.COMM, E.DEPTNO, /* KEMP.SAL, */
        CASE WHEN E.SAL > KEMP.SAL
             THEN E.SAL * 0.7
             ELSE E.SAL
