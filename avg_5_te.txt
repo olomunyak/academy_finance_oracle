@@ -1,0 +1,38 @@
+Plan hash value: 3885866619
+ 
+-------------------------------------------------------------------------------------------
+| Id  | Operation                      | Name     | Rows  | Bytes | Cost (%CPU)| Time     |
+-------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT               |          |     1 |    51 |    19  (37)| 00:00:01 |
+|   1 |  SORT ORDER BY                 |          |     1 |    51 |    19  (37)| 00:00:01 |
+|   2 |   NESTED LOOPS                 |          |     1 |    51 |    18  (34)| 00:00:01 |
+|   3 |    VIEW                        |          |     1 |    13 |    15  (40)| 00:00:01 |
+|   4 |     SORT AGGREGATE             |          |     1 |    43 |            |          |
+|   5 |      MERGE JOIN                |          |   357 | 15351 |    15  (40)| 00:00:01 |
+|   6 |       SORT JOIN                |          |    14 |    56 |     4  (25)| 00:00:01 |
+|   7 |        TABLE ACCESS FULL       | EMP      |    14 |    56 |     3   (0)| 00:00:01 |
+|*  8 |       FILTER                   |          |       |       |            |          |
+|*  9 |        SORT JOIN               |          |    42 |  1638 |    11  (46)| 00:00:01 |
+|* 10 |         VIEW                   |          |    42 |  1638 |    10  (40)| 00:00:01 |
+|  11 |          WINDOW SORT           |          |    42 |   588 |    10  (40)| 00:00:01 |
+|  12 |           HASH GROUP BY        |          |    42 |   588 |    10  (40)| 00:00:01 |
+|  13 |            MERGE JOIN          |          |    42 |   588 |     8  (25)| 00:00:01 |
+|  14 |             SORT JOIN          |          |     5 |    50 |     4  (25)| 00:00:01 |
+|  15 |              TABLE ACCESS FULL | SALGRADE |     5 |    50 |     3   (0)| 00:00:01 |
+|* 16 |             FILTER             |          |       |       |            |          |
+|* 17 |              SORT JOIN         |          |    14 |    56 |     4  (25)| 00:00:01 |
+|  18 |               TABLE ACCESS FULL| EMP      |    14 |    56 |     3   (0)| 00:00:01 |
+|* 19 |    TABLE ACCESS FULL           | EMP      |     1 |    38 |     3   (0)| 00:00:01 |
+-------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   8 - filter("E"."SAL"<="S"."HISAL")
+   9 - access(INTERNAL_FUNCTION("E"."SAL")>=INTERNAL_FUNCTION("S"."LOSAL"))
+       filter(INTERNAL_FUNCTION("E"."SAL")>=INTERNAL_FUNCTION("S"."LOSAL"))
+  10 - filter("S"."GRADE_RNK"<>1)
+  16 - filter("E"."SAL"<="S"."HISAL")
+  17 - access("E"."SAL">="S"."LOSAL")
+       filter("E"."SAL">="S"."LOSAL")
+  19 - filter("E"."SAL">="S"."AVG_SAL")
