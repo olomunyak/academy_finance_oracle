@@ -16,7 +16,8 @@ ORDER BY  E.SAL * 0.5 DESC;
 
 SELECT * FROM TABLE(dbms_xplan.display());
 
---
+------------------------------------------------------
+------------------------------------------------------
 
 EXPLAIN PLAN FOR
 SELECT S.GRADE, 
